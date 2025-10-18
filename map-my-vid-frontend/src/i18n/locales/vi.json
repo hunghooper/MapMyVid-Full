@@ -1,0 +1,77 @@
+{
+  "app": {
+    "name": "MapMyVid"
+  },
+  "header": {
+    "home": "Trang chủ",
+    "library": "Thư viện",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "toggleMenu": "Mở menu"
+  },
+  "dashboard": {
+    "title": "Map Dashboard",
+    "subtitle": "Quản lý và xem bản đồ từ các video của bạn"
+  },
+  "upload": {
+    "title": "Tải video mới",
+    "selectFile": "Chọn video để tải lên",
+    "dragDrop": "Kéo thả video vào đây hoặc nhấp để chọn",
+    "uploading": "Đang tải lên..."
+  },
+  "videos": {
+    "completed": "Video đã hoàn tất",
+    "noVideos": "Không có video nào.",
+    "date": "Ngày",
+    "delete": "Xóa",
+    "processing": "Đang xử lý",
+    "pending": "Đang chờ"
+  },
+  "map": {
+    "title": "Bản đồ địa điểm",
+    "selectVideo": "Chọn một video đã hoàn tất để xem bản đồ",
+    "loading": "Đang tải Google Maps...",
+    "loadError": "Lỗi tải Google Maps",
+    "checkApiKey": "Vui lòng kiểm tra API key"
+  },
+  "locations": {
+    "reorder": "Sắp xếp hành trình",
+    "dragToReorder": "Kéo thả để sắp xếp lại",
+    "clickToFocus": "Nhấp để tập trung vào bản đồ",
+    "noLocations": "Không có địa điểm nào",
+    "notFound": "Không tìm thấy địa điểm",
+    "noCoordinates": "Không có tọa độ"
+  },
+  "export": {
+    "toGoogleMaps": "Xuất sang Google Maps",
+    "noLocationsToExport": "Không có địa điểm nào để xuất ra Google Maps.",
+    "success": "Đã xuất thành công sang Google Maps"
+  },
+  "actions": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "close": "Đóng",
+    "edit": "Chỉnh sửa",
+    "view": "Xem"
+  },
+  "messages": {
+    "success": "Thành công!",
+    "error": "Có lỗi xảy ra",
+    "warning": "Cảnh báo",
+    "info": "Thông tin"
+  },
+  "validation": {
+    "required": "Trường này là bắt buộc",
+    "invalidFile": "Định dạng tệp không hợp lệ",
+    "fileTooLarge": "Tệp quá lớn"
+  },
+  "language": {
+    "vietnamese": "Tiếng Việt",
+    "english": "Tiếng Anh",
+    "japanese": "Tiếng Nhật",
+    "korean": "Tiếng Hàn",
+    "spanish": "Tiếng Tây Ban Nha",
+    "chinese": "Tiếng Trung"
+  }
+}

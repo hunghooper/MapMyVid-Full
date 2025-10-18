@@ -1,0 +1,77 @@
+{
+  "app": {
+    "name": "MapMyVid"
+  },
+  "header": {
+    "home": "Inicio",
+    "library": "Biblioteca",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión",
+    "toggleMenu": "Alternar menú"
+  },
+  "dashboard": {
+    "title": "Panel de mapas",
+    "subtitle": "Gestiona y visualiza mapas desde tus videos"
+  },
+  "upload": {
+    "title": "Subir nuevo video",
+    "selectFile": "Selecciona un video para subir",
+    "dragDrop": "Arrastra y suelta el video aquí o haz clic para seleccionar",
+    "uploading": "Subiendo..."
+  },
+  "videos": {
+    "completed": "Videos completados",
+    "noVideos": "No hay videos disponibles.",
+    "date": "Fecha",
+    "delete": "Eliminar",
+    "processing": "Procesando",
+    "pending": "Pendiente"
+  },
+  "map": {
+    "title": "Mapa de ubicación",
+    "selectVideo": "Selecciona un video completado para ver el mapa",
+    "loading": "Cargando Google Maps...",
+    "loadError": "Error al cargar Google Maps",
+    "checkApiKey": "Por favor, verifica tu clave de API"
+  },
+  "locations": {
+    "reorder": "Ordenar recorrido",
+    "dragToReorder": "Arrastra para reordenar",
+    "clickToFocus": "Haz clic para enfocar en el mapa",
+    "noLocations": "No hay ubicaciones disponibles",
+    "notFound": "Ubicación no encontrada",
+    "noCoordinates": "No hay coordenadas disponibles"
+  },
+  "export": {
+    "toGoogleMaps": "Exportar a Google Maps",
+    "noLocationsToExport": "No hay ubicaciones para exportar a Google Maps.",
+    "success": "Exportado exitosamente a Google Maps"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "edit": "Editar",
+    "view": "Ver"
+  },
+  "messages": {
+    "success": "¡Éxito!",
+    "error": "Ocurrió un error",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "invalidFile": "Formato de archivo no válido",
+    "fileTooLarge": "Archivo demasiado grande"
+  },
+  "language": {
+    "vietnamese": "Vietnamita",
+    "english": "Inglés",
+    "japanese": "Japonés",
+    "korean": "Coreano",
+    "spanish": "Español",
+    "chinese": "Chino"
+  }
+}

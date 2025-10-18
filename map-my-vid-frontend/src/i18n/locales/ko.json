@@ -1,0 +1,77 @@
+{
+  "app": {
+    "name": "MapMyVid"
+  },
+  "header": {
+    "home": "홈",
+    "library": "라이브러리",
+    "profile": "프로필",
+    "logout": "로그아웃",
+    "toggleMenu": "메뉴 전환"
+  },
+  "dashboard": {
+    "title": "지도 대시보드",
+    "subtitle": "비디오에서 지도를 관리하고 보기"
+  },
+  "upload": {
+    "title": "새 비디오 업로드",
+    "selectFile": "업로드할 비디오 선택",
+    "dragDrop": "비디오를 여기에 드래그하거나 클릭하여 선택",
+    "uploading": "업로드 중..."
+  },
+  "videos": {
+    "completed": "완료된 비디오",
+    "noVideos": "사용 가능한 비디오가 없습니다.",
+    "date": "날짜",
+    "delete": "삭제",
+    "processing": "처리 중",
+    "pending": "대기 중"
+  },
+  "map": {
+    "title": "위치 지도",
+    "selectVideo": "지도를 보기 위해 완료된 비디오 선택",
+    "loading": "Google 지도를 불러오는 중...",
+    "loadError": "Google 지도를 불러오는 데 오류가 발생했습니다",
+    "checkApiKey": "API 키를 확인하세요"
+  },
+  "locations": {
+    "reorder": "여정 정렬",
+    "dragToReorder": "드래그하여 순서 변경",
+    "clickToFocus": "지도를 포커스하려면 클릭",
+    "noLocations": "위치 정보가 없습니다",
+    "notFound": "위치를 찾을 수 없습니다",
+    "noCoordinates": "좌표가 없습니다"
+  },
+  "export": {
+    "toGoogleMaps": "Google 지도에 내보내기",
+    "noLocationsToExport": "내보낼 위치 정보가 없습니다.",
+    "success": "Google 지도에 성공적으로 내보냈습니다"
+  },
+  "actions": {
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "close": "닫기",
+    "edit": "편집",
+    "view": "보기"
+  },
+  "messages": {
+    "success": "성공!",
+    "error": "오류가 발생했습니다",
+    "warning": "경고",
+    "info": "정보"
+  },
+  "validation": {
+    "required": "이 필드는 필수입니다",
+    "invalidFile": "잘못된 파일 형식",
+    "fileTooLarge": "파일이 너무 큽니다"
+  },
+  "language": {
+    "vietnamese": "베트남어",
+    "english": "영어",
+    "japanese": "일본어",
+    "korean": "한국어",
+    "spanish": "스페인어",
+    "chinese": "중국어"
+  }
+}

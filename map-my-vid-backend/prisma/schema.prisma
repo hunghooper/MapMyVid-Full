@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  firstName     String?   @map("first_name")
+  lastName      String?   @map("last_name")
+  avatar        String?
+  role          UserRole  @default(USER)
+  isActive      Boolean   @default(true) @map("is_active")
+  
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  videos        Video[]
+  
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+model Video {
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
+  
+  filename      String
+  originalName  String        @map("original_name")
+  fileSize      Int           @map("file_size")
+  mimeType      String        @map("mime_type")
+  duration      Int?
+  city          String?
+  country       String?
+  summary       String?       @db.Text
+  status        VideoStatus   @default(PROCESSING)
+  errorMessage  String?       @map("error_message") @db.Text
+  processingTimeMs Int?       @map("processing_time_ms")
+  
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locations     Location[]
+  
+  @@index([userId])
+  @@map("videos")
+}
+
+model Location {
+  id              String    @id @default(uuid())
+  videoId         String    @map("video_id")
+  
+  originalName    String    @map("original_name")
+  type            LocationType
+  context         String    @db.Text
+  aiAddress       String?   @map("ai_address")
+  
+  googleName      String?   @map("google_name")
+  formattedAddress String?  @map("formatted_address")
+  latitude        Float?
+  longitude       Float?
+  placeId         String?   @map("place_id")
+  rating          Float?
+  googleMapsUrl   String?   @map("google_maps_url")
+  types           String[]  @default([])
+  
+  searchStatus    SearchStatus @default(PENDING) @map("search_status")
+  
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  
+  video           Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  
+  @@index([videoId])
+  @@index([placeId])
+  @@map("locations")
+}
+
+enum VideoStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum LocationType {
+  RESTAURANT
+  CAFE
+  HOTEL
+  ATTRACTION
+  STORE
+  OTHER
+}
+
+enum SearchStatus {
+  PENDING
+  FOUND
+  NOT_FOUND
+  ERROR
+}

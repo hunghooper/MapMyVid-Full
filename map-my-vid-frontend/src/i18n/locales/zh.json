@@ -1,0 +1,77 @@
+{
+  "app": {
+    "name": "MapMyVid"
+  },
+  "header": {
+    "home": "首页",
+    "library": "库",
+    "profile": "个人资料",
+    "logout": "退出登录",
+    "toggleMenu": "切换菜单"
+  },
+  "dashboard": {
+    "title": "地图仪表板",
+    "subtitle": "管理和查看您视频中的地图"
+  },
+  "upload": {
+    "title": "上传新视频",
+    "selectFile": "选择要上传的视频",
+    "dragDrop": "将视频拖放到此处或点击选择",
+    "uploading": "上传中..."
+  },
+  "videos": {
+    "completed": "已完成的视频",
+    "noVideos": "没有可用的视频。",
+    "date": "日期",
+    "delete": "删除",
+    "processing": "处理中",
+    "pending": "等待中"
+  },
+  "map": {
+    "title": "位置地图",
+    "selectVideo": "选择一个已完成的视频来查看地图",
+    "loading": "正在加载Google地图...",
+    "loadError": "加载Google地图时出错",
+    "checkApiKey": "请检查您的API密钥"
+  },
+  "locations": {
+    "reorder": "安排行程",
+    "dragToReorder": "拖拽重新排序",
+    "clickToFocus": "点击聚焦到地图",
+    "noLocations": "没有可用的位置",
+    "notFound": "未找到位置",
+    "noCoordinates": "没有坐标"
+  },
+  "export": {
+    "toGoogleMaps": "导出到Google地图",
+    "noLocationsToExport": "没有位置可以导出到Google地图。",
+    "success": "成功导出到Google地图"
+  },
+  "actions": {
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "close": "关闭",
+    "edit": "编辑",
+    "view": "查看"
+  },
+  "messages": {
+    "success": "成功！",
+    "error": "发生错误",
+    "warning": "警告",
+    "info": "信息"
+  },
+  "validation": {
+    "required": "此字段为必填项",
+    "invalidFile": "无效的文件格式",
+    "fileTooLarge": "文件过大"
+  },
+  "language": {
+    "vietnamese": "越南语",
+    "english": "英语",
+    "japanese": "日语",
+    "korean": "韩语",
+    "spanish": "西班牙语",
+    "chinese": "中文"
+  }
+}

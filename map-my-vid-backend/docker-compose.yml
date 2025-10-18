@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mapmyvid_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mapmyvid}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mapmyvid_api
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # Override DATABASE_URL to point to db container if not provided
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-mapmyvid}?schema=public}
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-development}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      # For development hot-reload; comment out for production
+      - ./src:/usr/src/app/src
+      - ./uploads:/usr/src/app/uploads
+      - ./prisma:/usr/src/app/prisma
+      - /usr/src/app/node_modules
+    command: sh -c "npx prisma generate && npm run build && node dist/main.js"
+
+volumes:
+  pgdata:

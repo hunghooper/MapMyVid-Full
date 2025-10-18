@@ -1,0 +1,77 @@
+{
+  "app": {
+    "name": "MapMyVid"
+  },
+  "header": {
+    "home": "ホーム",
+    "library": "ライブラリ",
+    "profile": "プロフィール",
+    "logout": "ログアウト",
+    "toggleMenu": "メニューを切り替え"
+  },
+  "dashboard": {
+    "title": "マップダッシュボード",
+    "subtitle": "動画からマップを管理・表示"
+  },
+  "upload": {
+    "title": "新しい動画をアップロード",
+    "selectFile": "アップロードする動画を選択",
+    "dragDrop": "ここに動画をドラッグ＆ドロップ、またはクリックして選択",
+    "uploading": "アップロード中..."
+  },
+  "videos": {
+    "completed": "完了した動画",
+    "noVideos": "利用可能な動画がありません。",
+    "date": "日付",
+    "delete": "削除",
+    "processing": "処理中",
+    "pending": "保留中"
+  },
+  "map": {
+    "title": "ロケーションマップ",
+    "selectVideo": "完了した動画を選択してマップを表示",
+    "loading": "Googleマップを読み込み中...",
+    "loadError": "Googleマップの読み込みエラー",
+    "checkApiKey": "APIキーをご確認ください"
+  },
+  "locations": {
+    "reorder": "旅程を並べ替え",
+    "dragToReorder": "ドラッグして順序を変更",
+    "clickToFocus": "クリックしてマップにフォーカス",
+    "noLocations": "ロケーションがありません",
+    "notFound": "ロケーションが見つかりません",
+    "noCoordinates": "座標がありません"
+  },
+  "export": {
+    "toGoogleMaps": "Googleマップにエクスポート",
+    "noLocationsToExport": "エクスポートするロケーションがありません。",
+    "success": "Googleマップに正常にエクスポートされました"
+  },
+  "actions": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "close": "閉じる",
+    "edit": "編集",
+    "view": "表示"
+  },
+  "messages": {
+    "success": "成功！",
+    "error": "エラーが発生しました",
+    "warning": "警告",
+    "info": "情報"
+  },
+  "validation": {
+    "required": "この項目は必須です",
+    "invalidFile": "無効なファイル形式",
+    "fileTooLarge": "ファイルサイズが大きすぎます"
+  },
+  "language": {
+    "vietnamese": "ベトナム語",
+    "english": "英語",
+    "japanese": "日本語",
+    "korean": "韓国語",
+    "spanish": "スペイン語",
+    "chinese": "中国語"
+  }
+}
