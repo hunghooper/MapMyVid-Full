@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDeleteVideo, useUploadVideo, useVideos } from '@/hooks/useVideos'
-import { useDeleteLocation } from '@/hooks/useLocations'
+import { useDeleteLocation, useToggleFavorite } from '@/hooks/useLocations'
 import type { DetectedLocation, Video } from '@/types/video.type'
 import { useTranslation } from 'react-i18next'
 
@@ -14,11 +14,29 @@ import EmptyState from '@/components/EmptyState'
 
 // Kiểm tra địa điểm có tọa độ hợp lệ
 const isValidLocation = (loc: DetectedLocation) => {
-  return (
-    loc.google_place.location?.lat !== undefined &&
-    loc.google_place.location?.lng !== undefined &&
-    !loc.google_place.error
-  )
+  console.log('Checking location:', loc.id, {
+    latitude: loc.latitude,
+    longitude: loc.longitude,
+    google_place: loc.google_place,
+    isFavorite: loc.isFavorite
+  })
+  
+  // Kiểm tra từ google_place trước (vì latitude/longitude có thể là undefined)
+  if (loc.google_place?.location?.lat !== undefined && 
+      loc.google_place?.location?.lng !== undefined && 
+      !loc.google_place?.error) {
+    console.log('Valid from google_place:', loc.id)
+    return true
+  }
+  
+  // Fallback: kiểm tra từ backend data (latitude, longitude)
+  if (loc.latitude !== undefined && loc.longitude !== undefined) {
+    console.log('Valid from backend data:', loc.id)
+    return true
+  }
+  
+  console.log('Invalid location:', loc.id)
+  return false
 }
 
 export default function MapDashboard() {
@@ -29,19 +47,28 @@ export default function MapDashboard() {
   const uploadMutation = useUploadVideo()
   const deleteMutation = useDeleteVideo()
   const deleteLocationMutation = useDeleteLocation()
+  const toggleFavoriteMutation = useToggleFavorite()
 
   const videos = data?.videos || []
   const completedVideos = useMemo(() => videos.filter((v: Video) => v.status === 'COMPLETED'), [videos])
 
   // State
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(videos[0] || null)
+  
+  // Debug logs
+  console.log('videos:', videos)
+  console.log('completedVideos:', completedVideos)
+  console.log('selectedVideo:', selectedVideo)
   const [activeMarker, setActiveMarker] = useState<number | null>(null)
   const mapRef = useRef<google.maps.Map | null>(null)
 
   // Valid locations (có tọa độ)
   const validLocations = useMemo(() => {
     if (!selectedVideo?.locations) return []
-    return selectedVideo.locations.filter(isValidLocation)
+    console.log('selectedVideo.locations:', selectedVideo.locations)
+    const valid = selectedVideo.locations.filter(isValidLocation)
+    console.log('validLocations:', valid)
+    return valid
   }, [selectedVideo?.locations])
 
   // Cleanup map state when video changes
@@ -73,6 +100,7 @@ export default function MapDashboard() {
       return () => clearTimeout(timer)
     }
   }, [validLocations.length])
+
 
   // Auto-select first video
   useEffect(() => {
@@ -140,6 +168,28 @@ export default function MapDashboard() {
       }
     })
   }, [deleteLocationMutation, selectedVideo, validLocations, activeMarker])
+
+  // Handle toggle favorite
+  const handleToggleFavorite = useCallback((locationId: string) => {
+    toggleFavoriteMutation.mutate(locationId, {
+      onSuccess: (response) => {
+        // response.data là Location object trực tiếp từ backend
+        // Cập nhật local state với data mới
+        if (selectedVideo) {
+          const updatedLocations = selectedVideo.locations.map(loc => 
+            loc.id === locationId 
+              ? { ...loc, isFavorite: response.data.isFavorite }
+              : loc
+          )
+          setSelectedVideo({ ...selectedVideo, locations: updatedLocations })
+        }
+      },
+      onError: (error) => {
+        console.error('Failed to toggle favorite:', error)
+        // Có thể thêm toast notification ở đây
+      }
+    })
+  }, [toggleFavoriteMutation, selectedVideo])
 
   // Export to Google Maps
   const handleExportToGoogleMaps = () => {
@@ -226,6 +276,7 @@ export default function MapDashboard() {
                       onLocationReorder={handleLocationReorder}
                       onLocationFocus={handleLocationFocus}
                       onLocationDelete={handleLocationDelete}
+                      onToggleFavorite={handleToggleFavorite}
                     />
                   </div>
                 </div>

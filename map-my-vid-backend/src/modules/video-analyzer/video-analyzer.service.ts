@@ -80,7 +80,8 @@ export class VideoAnalyzerService {
             })
 
             const googlePlace = await this.googleMapsService.searchPlace(
-              location.address as string,
+              location.name,
+              location.address,
               aiAnalysis.city,
               aiAnalysis.country
             )
@@ -112,7 +113,8 @@ export class VideoAnalyzerService {
               original_name: location.name,
               type: location.type,
               context: location.context,
-              google_place: googlePlace
+              google_place: googlePlace,
+              isFavorite: locationRecord.isFavorite
             }
           })
         )

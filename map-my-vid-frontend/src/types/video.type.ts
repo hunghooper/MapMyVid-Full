@@ -17,6 +17,21 @@ export interface DetectedLocation {
   type: string
   context: string
   google_place: GooglePlaceInfo
+  isFavorite?: boolean
+  // Thêm các fields từ backend để đồng bộ
+  videoId?: string
+  aiAddress?: string
+  googleName?: string
+  formattedAddress?: string
+  latitude?: number
+  longitude?: number
+  placeId?: string
+  rating?: number | null
+  googleMapsUrl?: string
+  types?: string[]
+  searchStatus?: 'FOUND' | 'NOT_FOUND' | 'PENDING'
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface VideoInfo {
@@ -54,6 +69,7 @@ export interface VideoLocation {
   googleMapsUrl: string
   types: string[]
   searchStatus: 'FOUND' | 'NOT_FOUND' | 'PENDING'
+  isFavorite: boolean
   createdAt: string
   updatedAt: string
 }

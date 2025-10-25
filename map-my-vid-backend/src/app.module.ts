@@ -17,5 +17,5 @@ import { AdminModule } from './modules/admin/admin.module.js'
     LocationsModule,
     AdminModule
   ]
-})
+}) 
 export class AppModule {}

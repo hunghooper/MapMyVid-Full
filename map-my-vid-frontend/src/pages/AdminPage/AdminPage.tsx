@@ -1,5 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { BarChart2, Edit, ExternalLink, LogOut, MapPin, Trash2, Users, Video } from 'lucide-react'
+import { AppContext } from '@/contexts/app.context'
+import authApi from '@/api/auth.api'
+import { useMutation } from '@tanstack/react-query'
+import { clearAllAuthData } from '@/utils/auth'
 
 //import { jwtDecode } from 'jwt-decode';
 
@@ -99,6 +103,7 @@ const mockUsers = [
 ]
 
 const AdminPage = () => {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const [isAdmin, setIsAdmin] = useState(true)
   const [loading, setLoading] = useState(true)
 
@@ -118,9 +123,26 @@ const AdminPage = () => {
     setLoading(false)
   }, [])
 
+  const logoutAccountMutation = useMutation({
+    mutationFn: authApi.logoutAccount,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+      setProfile(null)
+      clearAllAuthData()
+      console.log('Logout successful - redirecting to login')
+      // Routing system will automatically redirect due to isAuthenticated = false
+    },
+    onError: (error) => {
+      console.error('Logout failed:', error)
+      // Even if API fails, clear local data and redirect
+      setIsAuthenticated(false)
+      setProfile(null)
+      clearAllAuthData()
+    }
+  })
+
   const handleLogout = () => {
-    localStorage.removeItem('access_token')
-    window.location.href = '/login' // Chuyển hướng về trang đăng nhập
+    logoutAccountMutation.mutate()
   }
 
   if (loading) {

@@ -2,14 +2,23 @@ import React, { useCallback, useRef } from 'react'
 import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { DetectedLocation, Video } from '@/types/video.type'
+import HeartIcon from '@/components/HeartIcon'
 
 // Kiểm tra địa điểm có tọa độ hợp lệ
 const isValidLocation = (loc: DetectedLocation) => {
-  return (
-    loc.google_place.location?.lat !== undefined &&
-    loc.google_place.location?.lng !== undefined &&
-    !loc.google_place.error
-  )
+  // Kiểm tra từ google_place trước (vì latitude/longitude có thể là undefined)
+  if (loc.google_place?.location?.lat !== undefined && 
+      loc.google_place?.location?.lng !== undefined && 
+      !loc.google_place?.error) {
+    return true
+  }
+  
+  // Fallback: kiểm tra từ backend data (latitude, longitude)
+  if (loc.latitude !== undefined && loc.longitude !== undefined) {
+    return true
+  }
+  
+  return false
 }
 
 interface LocationListProps {
@@ -19,6 +28,7 @@ interface LocationListProps {
   onLocationReorder: (newLocations: DetectedLocation[]) => void
   onLocationFocus: (index: number) => void
   onLocationDelete: (locationId: string) => void
+  onToggleFavorite?: (locationId: string) => void
 }
 
 const LocationList: React.FC<LocationListProps> = ({
@@ -27,7 +37,8 @@ const LocationList: React.FC<LocationListProps> = ({
   mapRef,
   onLocationReorder,
   onLocationFocus,
-  onLocationDelete
+  onLocationDelete,
+  onToggleFavorite
 }) => {
   const { t } = useTranslation()
   const dragItem = useRef<number | null>(null)
@@ -44,7 +55,7 @@ const LocationList: React.FC<LocationListProps> = ({
     e.dataTransfer.dropEffect = 'move'
   }, [])
 
-  const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>, position: number) => {
+  const handleDragEnter = useCallback((_e: React.DragEvent<HTMLDivElement>, position: number) => {
     dragOverItem.current = position
   }, [])
 
@@ -70,7 +81,7 @@ const LocationList: React.FC<LocationListProps> = ({
     [selectedVideo, onLocationReorder]
   )
 
-  const handleLocationClick = useCallback((loc: DetectedLocation, idx: number) => {
+  const handleLocationClick = useCallback((loc: DetectedLocation, _idx: number) => {
     if (mapRef.current && isValidLocation(loc)) {
       mapRef.current.panTo({
         lat: loc.google_place.location.lat,
@@ -126,14 +137,26 @@ const LocationList: React.FC<LocationListProps> = ({
                       {loc.google_place.error || loc.google_place.formatted_address || loc.context}
                     </p>
                   </div>
-                  <button
-                    onClick={(e) => handleDeleteLocation(e, loc.id)}
-                    className='ml-2 p-1 text-gray-400 transition-colors hover:text-red-500'
-                    aria-label={t('videos.delete')}
-                    title={t('videos.delete')}
-                  >
-                    <Trash2 className='h-3 w-3 sm:h-4 sm:w-4' />
-                  </button>
+                  <div className="flex flex-col items-center gap-1">
+                    <button
+                      onClick={(e) => handleDeleteLocation(e, loc.id)}
+                      className='p-1 text-gray-400 transition-colors hover:text-red-500'
+                      aria-label={t('videos.delete')}
+                      title={t('videos.delete')}
+                    >
+                      <Trash2 className='h-3 w-3 sm:h-4 sm:w-4' />
+                    </button>
+                    {onToggleFavorite && (
+                      <HeartIcon
+                        isFilled={!!loc.isFavorite}
+                        onClick={() => {
+                          onToggleFavorite(loc.id)
+                        }}
+                        className="cursor-pointer"
+                        size="sm"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             )

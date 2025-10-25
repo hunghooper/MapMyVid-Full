@@ -6,11 +6,11 @@ import { useMutation } from '@tanstack/react-query'
 import Logo from 'assets/LOGO-Photoroom.png'
 import LanguageSwitcher from 'components/LanguageSwitcher'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { clearAllAuthData } from '@/utils/auth'
 
 const Header = () => {
   const { setIsAuthenticated, setProfile, isAuthenticated } = useContext(AppContext)
-  const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const { t } = useTranslation()
 
@@ -22,9 +22,17 @@ const Header = () => {
     mutationFn: authApi.logoutAccount,
     onSuccess: () => {
       setIsAuthenticated(false)
-      console.log('Logout successful', isAuthenticated)
       setProfile(null)
-      navigate(path.login)
+      clearAllAuthData()
+      console.log('Logout successful - redirecting to login')
+      // Routing system will automatically redirect due to isAuthenticated = false
+    },
+    onError: (error) => {
+      console.error('Logout failed:', error)
+      // Even if API fails, clear local data and redirect
+      setIsAuthenticated(false)
+      setProfile(null)
+      clearAllAuthData()
     }
   })
 

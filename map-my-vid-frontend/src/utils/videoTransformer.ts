@@ -23,6 +23,7 @@ export class VideoTransformer {
       original_name: loc.originalName,
       type: loc.type.toLowerCase() as 'restaurant' | 'store' | 'cafe',
       context: loc.context,
+      isFavorite: loc.isFavorite || false,
       google_place: {
         name: loc.googleName,
         formatted_address: loc.formattedAddress,

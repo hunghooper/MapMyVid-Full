@@ -18,6 +18,7 @@ export interface Location {
   googleMapsUrl: string
   types: string[]
   searchStatus: 'FOUND' | 'NOT_FOUND' | 'PENDING'
+  isFavorite: boolean
   createdAt: string
   updatedAt: string
 }
@@ -53,6 +54,7 @@ export interface UpdateLocationRequest {
   googleMapsUrl?: string
   types?: string[]
   searchStatus?: 'FOUND' | 'NOT_FOUND' | 'PENDING'
+  isFavorite?: boolean
 }
 
 export interface LocationListResponse {
@@ -69,10 +71,13 @@ export const locationApi = {
   },
 
   // GET /api/locations - Get all locations with pagination
-  getLocations(page = 1, pageSize = 20, videoId?: string) {
+  getLocations(page = 1, pageSize = 20, videoId?: string, favoritesOnly = false) {
     const params: any = { page, pageSize }
     if (videoId) {
       params.videoId = videoId
+    }
+    if (favoritesOnly) {
+      params.favoritesOnly = true
     }
     
     return http.get<LocationListResponse>(path.locations, { params })
@@ -91,6 +96,25 @@ export const locationApi = {
   // DELETE /api/locations/{id} - Delete location
   deleteLocation(id: string) {
     return http.delete(`${path.locations}/${id}`)
+  },
+
+  // PATCH /api/locations/{id}/favorite - Toggle favorite status
+  toggleFavorite(id: string) {
+    return http.patch<Location>(`${path.locations}/${id}/favorite`)
+  },
+
+  // GET /api/locations/favorites - Get all favorite locations
+  getFavoriteLocations(page = 1, pageSize = 20, videoId?: string) {
+    const params: any = { page, pageSize }
+    if (videoId) {
+      params.videoId = videoId
+    }
+    return http.get<LocationListResponse>(`${path.locations}/favorites`, { params })
+  },
+
+  // PATCH /api/locations/{id}/favorite/set - Set favorite status directly
+  setFavorite(id: string, isFavorite: boolean) {
+    return http.patch<Location>(`${path.locations}/${id}/favorite/set`, { isFavorite })
   }
 }
 

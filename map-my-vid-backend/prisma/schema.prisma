@@ -76,6 +76,7 @@ model Location {
   types           String[]  @default([])
   
   searchStatus    SearchStatus @default(PENDING) @map("search_status")
+  isFavorite      Boolean   @default(false) @map("is_favorite")
   
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
@@ -84,6 +85,7 @@ model Location {
   
   @@index([videoId])
   @@index([placeId])
+  @@index([isFavorite])
   @@map("locations")
 }
 

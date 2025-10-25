@@ -1,7 +1,7 @@
 import { RawAuthResponse } from '@/types/utils.type'
 import axios, { AxiosInstance } from 'axios'
 import path from '../constants/path'
-import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from './auth'
+import { clearAllAuthData, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from './auth'
 
 class Http {
   instance: AxiosInstance
@@ -37,7 +37,7 @@ class Http {
         setProfileToLS(responseData.user)
       } else if (url === path.logout) {
         this.access_token = ''
-        clearLS()
+        clearAllAuthData()
       }
       return response
     })

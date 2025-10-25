@@ -37,6 +37,8 @@ This monorepo contains two main applications:
 - **Drag & Drop Reordering** of travel stops
 - **Auto-fit Bounds** for optimal map viewing
 - **Export to Google Maps** for navigation
+- **Location Favorites** with heart icon indicators
+- **Filter by Favorites** for quick access
 
 ### 🔐 Authentication & Security
 - JWT-based authentication
@@ -45,10 +47,12 @@ This monorepo contains two main applications:
 - Environment-based configuration
 
 ### 📊 Location Management
-- CRUD operations for locations
-- User-specific location collections
-- Rich location details and metadata
-- Admin dashboard for user management
+- **CRUD operations** for locations with full validation
+- **Favorite system** - Mark and filter favorite locations
+- **User-specific collections** with pagination
+- **Rich location details** and metadata
+- **Admin dashboard** for user management
+- **Real-time updates** with React Query
 
 ## 🚀 Quick Start
 
@@ -148,11 +152,22 @@ MapMyVid/
 ├── map-my-vid-frontend/          # React frontend application
 │   ├── src/
 │   │   ├── components/           # Reusable UI components
+│   │   │   ├── HeartIcon/        # Favorite heart icon component
+│   │   │   ├── LocationList/     # Location list with favorites
+│   │   │   ├── LocationManagement/ # Location CRUD with favorites
+│   │   │   └── ...               # Other components
 │   │   ├── pages/               # Application pages
 │   │   ├── hooks/               # Custom React hooks
+│   │   │   ├── useLocations.ts  # Location & favorite hooks
+│   │   │   └── ...               # Other hooks
 │   │   ├── api/                 # API integration
+│   │   │   ├── location.api.ts  # Location & favorite APIs
+│   │   │   └── ...               # Other APIs
 │   │   ├── i18n/                # Internationalization
-│   │   └── utils/               # Utility functions
+│   │   ├── utils/               # Utility functions
+│   │   │   ├── videoTransformer.ts # Data transformation
+│   │   │   └── ...               # Other utilities
+│   │   └── types/               # TypeScript type definitions
 │   ├── public/                  # Static assets
 │   └── package.json
 ├── map-my-vid-backend/           # NestJS backend application
@@ -161,12 +176,17 @@ MapMyVid/
 │   │   │   ├── auth/            # Authentication
 │   │   │   ├── users/           # User management
 │   │   │   ├── video-analyzer/  # AI video analysis
-│   │   │   ├── locations/       # Location CRUD
+│   │   │   ├── locations/       # Location CRUD + Favorites
+│   │   │   │   ├── dto/         # Data Transfer Objects
+│   │   │   │   ├── locations.controller.ts
+│   │   │   │   └── locations.service.ts
 │   │   │   └── admin/           # Admin panel
 │   │   ├── common/              # Shared utilities
 │   │   ├── database/            # Prisma configuration
 │   │   └── config/              # App configuration
 │   ├── prisma/                  # Database schema & migrations
+│   │   ├── schema.prisma        # Database schema with isFavorite
+│   │   └── migrations/          # Database migrations
 │   └── package.json
 ├── README.md                    # This file
 └── .gitignore                   # Git ignore rules
@@ -182,6 +202,8 @@ MapMyVid/
 - **React Router** - Client-side routing
 - **i18next** - Internationalization
 - **@react-google-maps/api** - Google Maps integration
+- **@tanstack/react-query** - Server state management
+- **Axios** - HTTP client with interceptors
 
 ### Backend Stack
 - **NestJS** - Progressive Node.js framework
@@ -208,13 +230,27 @@ The backend provides comprehensive API documentation via Swagger:
 - **Production**: `https://your-domain.com/api/docs`
 
 ### Key API Endpoints
+
+#### Authentication
 - `POST /api/auth/login` - User authentication
 - `POST /api/auth/register` - User registration
+
+#### Video Analysis
 - `POST /api/video-analyzer/upload` - Video upload and analysis
-- `GET /api/locations` - Get user locations
+- `GET /api/video-analyzer/videos` - Get user videos
+
+#### Location Management
+- `GET /api/locations` - Get user locations with pagination
+- `GET /api/locations/favorites` - Get favorite locations only
 - `POST /api/locations` - Create new location
-- `PUT /api/locations/:id` - Update location
+- `PATCH /api/locations/:id` - Update location
+- `PATCH /api/locations/:id/favorite` - Toggle favorite status
+- `PATCH /api/locations/:id/favorite/set` - Set favorite status directly
 - `DELETE /api/locations/:id` - Delete location
+
+#### Admin
+- `GET /api/admin/users` - Get all users (Admin only)
+- `GET /api/admin/statistics` - Get system statistics
 
 ## 🔒 Security Features
 
@@ -225,6 +261,24 @@ The backend provides comprehensive API documentation via Swagger:
 - **CORS configuration** for cross-origin requests
 - **Environment variable** management
 - **Helmet** security headers
+
+## ❤️ Favorite System
+
+The application includes a comprehensive favorite system for locations:
+
+### Features
+- **Heart Icon Indicators** - Visual favorite status on all location cards
+- **Toggle Functionality** - Click to add/remove from favorites
+- **Filter by Favorites** - Show only favorite locations
+- **Real-time Updates** - Instant UI updates with React Query
+- **Persistent Storage** - Favorites saved in database
+- **API Endpoints** - Full CRUD operations for favorite management
+
+### Usage
+1. **Mark as Favorite**: Click the heart icon on any location
+2. **Filter Favorites**: Use "Show favorites only" checkbox
+3. **View Favorites**: Access dedicated favorites page
+4. **Remove from Favorites**: Click the filled heart icon
 
 ## 🌍 Internationalization
 

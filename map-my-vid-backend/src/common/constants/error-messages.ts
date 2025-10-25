@@ -48,6 +48,9 @@ export const ERROR_MESSAGES = {
     FAILED_FIND: 'Failed to find location',
     FAILED_UPDATE: 'Failed to update location',
     FAILED_DELETE: 'Failed to delete location',
+    FAILED_TOGGLE_FAVORITE: 'Failed to toggle favorite status',
+    FAILED_SET_FAVORITE: 'Failed to set favorite status',
+    INVALID_FAVORITE_STATUS: 'Invalid favorite status value',
     INVALID_PAGINATION: 'Invalid pagination parameters'
   },
 

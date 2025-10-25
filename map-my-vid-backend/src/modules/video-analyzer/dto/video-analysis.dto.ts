@@ -39,6 +39,7 @@ export interface FinalResponseDto {
     type: string
     context: string
     google_place: GooglePlaceDto | { error: string }
+    isFavorite: boolean
   }>
   processing_time_ms: number
 }
