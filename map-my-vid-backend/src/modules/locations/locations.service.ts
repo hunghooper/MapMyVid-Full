@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common'
-import { Prisma, SearchStatus } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from '../../database/prisma.service.js'
 import { ERROR_MESSAGES } from '../../common/constants/error-messages.js'
 
@@ -19,13 +19,16 @@ export class LocationsService {
     }
   }
 
-  async findAllByUser(userId: string, params?: { skip?: number; take?: number; favoritesOnly?: boolean; videoId?: string }) {
+  async findAllByUser(
+    userId: string,
+    params?: { skip?: number; take?: number; favoritesOnly?: boolean; videoId?: string }
+  ) {
     if (!userId) {
       throw new BadRequestException(ERROR_MESSAGES.LOCATION.USER_ID_REQUIRED)
     }
 
     const { skip = 0, take = 20, favoritesOnly = false, videoId } = params ?? {}
-    
+
     if (skip < 0 || take < 0 || take > 100) {
       throw new BadRequestException(ERROR_MESSAGES.LOCATION.INVALID_PAGINATION)
     }
@@ -70,14 +73,14 @@ export class LocationsService {
     }
 
     try {
-      const location = await this.prisma.location.findFirst({ 
-        where: { id, video: { userId } } 
+      const location = await this.prisma.location.findFirst({
+        where: { id, video: { userId } }
       })
-      
+
       if (!location) {
         throw new NotFoundException(ERROR_MESSAGES.LOCATION.NOT_FOUND)
       }
-      
+
       return location
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -93,17 +96,17 @@ export class LocationsService {
     }
 
     try {
-      const existingLocation = await this.prisma.location.findFirst({ 
-        where: { id, video: { userId } } 
+      const existingLocation = await this.prisma.location.findFirst({
+        where: { id, video: { userId } }
       })
-      
+
       if (!existingLocation) {
         throw new NotFoundException(ERROR_MESSAGES.LOCATION.NOT_FOUND)
       }
 
       return await this.prisma.location.update({
         where: { id },
-        data,
+        data
       })
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -119,14 +122,14 @@ export class LocationsService {
     }
 
     try {
-      const existing = await this.prisma.location.findFirst({ 
-        where: { id, video: { userId } } 
+      const existing = await this.prisma.location.findFirst({
+        where: { id, video: { userId } }
       })
-      
+
       if (!existing) {
         throw new NotFoundException(ERROR_MESSAGES.LOCATION.NOT_FOUND)
       }
-      
+
       return await this.prisma.location.delete({ where: { id } })
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -142,10 +145,10 @@ export class LocationsService {
     }
 
     try {
-      const existing = await this.prisma.location.findFirst({ 
-        where: { id, video: { userId } } 
+      const existing = await this.prisma.location.findFirst({
+        where: { id, video: { userId } }
       })
-      
+
       if (!existing) {
         throw new NotFoundException(ERROR_MESSAGES.LOCATION.NOT_FOUND)
       }
@@ -172,10 +175,10 @@ export class LocationsService {
     }
 
     try {
-      const existing = await this.prisma.location.findFirst({ 
-        where: { id, video: { userId } } 
+      const existing = await this.prisma.location.findFirst({
+        where: { id, video: { userId } }
       })
-      
+
       if (!existing) {
         throw new NotFoundException(ERROR_MESSAGES.LOCATION.NOT_FOUND)
       }
@@ -192,4 +195,3 @@ export class LocationsService {
     }
   }
 }
-
