@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module.js'
 import { UsersModule } from './modules/users/users.module.js'
 import { LocationsModule } from './modules/locations/locations.module.js'
 import { AdminModule } from './modules/admin/admin.module.js'
+import { AiAgentModule } from './modules/ai-agent/ai-agent.module.js'
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { AdminModule } from './modules/admin/admin.module.js'
     UsersModule,
     VideoAnalyzerModule,
     LocationsModule,
-    AdminModule
+    AdminModule,
+    AiAgentModule
   ]
 }) 
 export class AppModule {}

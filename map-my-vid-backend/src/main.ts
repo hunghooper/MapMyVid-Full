@@ -8,7 +8,7 @@ import { helmetConfig, helmetDevConfig } from './config/helmet.config.js'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  const allowedOrigins = process.env.FRONTEND_URLS?.split(',')
+  const allowedOrigins = process.env.FRONTEND_URLS?.split(',') || ['http://localhost:3000']
 
   // Security headers with Helmet - use different config based on environment
   const isDevelopment = process.env.NODE_ENV === 'development'
@@ -17,13 +17,7 @@ async function bootstrap() {
   app.enableCors({
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Accept',
-      'Origin',
-      'X-Requested-With'
-    ],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
     credentials: true,
     optionsSuccessStatus: 200
   })
