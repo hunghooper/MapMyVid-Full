@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["node", "express", "multer"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
@@ -15,11 +16,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-       "src/*": ["src/*"],
-       "@common/*": ["src/common/*"],
-       "@modules/*": ["src/modules/*"],
-       "@config/*": ["src/config/*"],
-       "@database/*": ["src/database/*"]
+      "src/*": ["src/*"],
+      "@common/*": ["src/common/*"],
+      "@modules/*": ["src/modules/*"],
+      "@config/*": ["src/config/*"],
+      "@database/*": ["src/database/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
