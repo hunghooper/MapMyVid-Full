@@ -12,7 +12,7 @@ export class CreateLocationDto {
   originalName: string
 
   @ApiProperty({ description: 'Type of location', enum: LocationType })
-  @IsEnum(LocationType)
+  @IsEnum(Object.values(LocationType))
   type: LocationType
 
   @ApiProperty({ description: 'Context information' })
@@ -67,7 +67,7 @@ export class CreateLocationDto {
 
   @ApiProperty({ description: 'Search status', enum: SearchStatus, required: false })
   @IsOptional()
-  @IsEnum(SearchStatus)
+  @IsEnum(Object.values(SearchStatus))
   searchStatus?: SearchStatus
 
   @ApiProperty({ description: 'Is favorite', required: false, default: false })
@@ -84,7 +84,7 @@ export class UpdateLocationDto {
 
   @ApiProperty({ description: 'Type of location', enum: LocationType, required: false })
   @IsOptional()
-  @IsEnum(LocationType)
+  @IsEnum(Object.values(LocationType))
   type?: LocationType
 
   @ApiProperty({ description: 'Context information', required: false })
@@ -140,7 +140,7 @@ export class UpdateLocationDto {
 
   @ApiProperty({ description: 'Search status', enum: SearchStatus, required: false })
   @IsOptional()
-  @IsEnum(SearchStatus)
+  @IsEnum(Object.values(SearchStatus))
   searchStatus?: SearchStatus
 
   @ApiProperty({ description: 'Is favorite', required: false })
