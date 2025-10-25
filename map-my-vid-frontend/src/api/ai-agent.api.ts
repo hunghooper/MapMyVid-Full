@@ -11,6 +11,15 @@ export interface RoutePreferences {
   duration?: number
 }
 
+export interface HotelRecommendation {
+  name: string
+  price: string
+  rating: string
+  distance: string
+  address: string
+  bookingUrl: string
+}
+
 export interface RouteItem {
   order: number
   locationId: string
@@ -18,6 +27,7 @@ export interface RouteItem {
   estimatedDuration: string
   transportation: string
   notes: string
+  hotelRecommendations?: HotelRecommendation[]
   location?: {
     id: string
     name: string
@@ -34,6 +44,8 @@ export interface RouteSummary {
   totalDistance: string
   transportationMode: string
   bestTimeToStart: string
+  isOvernightTrip?: boolean
+  totalEstimatedCost?: string
 }
 
 export interface RouteResponse {

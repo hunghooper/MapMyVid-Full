@@ -308,7 +308,7 @@ export default function MapDashboard() {
         onClose={() => setIsAiRouteModalOpen(false)}
         title="AI Route Planner"
         mode="sidebar"
-        className="max-w-2xl h-full max-h-[80vh] overflow-y-auto"
+        className="max-w-4xl h-full max-h-[80vh] overflow-y-auto"
       >
         <AiRoutePlanner />
       </Modal>

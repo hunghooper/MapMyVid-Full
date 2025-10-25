@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useGenerateRoute, useGenerateRouteWithAudio } from '../../hooks/useAiRoute'
 import { useAudioRecorder } from '../../hooks/useAudioRecorder'
 import { AudioPlayer } from '../AudioPlayer'
+import { HotelCard } from '../HotelCard'
 import { RoutePreferences, AudioRouteResponse } from '../../api/ai-agent.api'
 
 export function AiRoutePlanner() {
@@ -169,7 +170,7 @@ export function AiRoutePlanner() {
       ) : (
         /* Text Mode UI */
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Time of Day</label>
               <select
@@ -276,7 +277,7 @@ export function AiRoutePlanner() {
           
           <div className="bg-gray-50 rounded-2xl p-4">
             <h4 className="text-lg font-medium text-gray-900 mb-3">Route Summary</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="text-2xl font-light text-gray-900">{getSummary()?.totalDuration}</div>
                 <div className="text-sm text-gray-500">Duration</div>
@@ -294,6 +295,21 @@ export function AiRoutePlanner() {
                 <div className="text-sm text-gray-500">Start Time</div>
               </div>
             </div>
+            
+            {getSummary()?.isOvernightTrip && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="text-center">
+                    <div className="text-2xl font-light text-gray-900">{getSummary()?.totalEstimatedCost}</div>
+                    <div className="text-sm text-gray-500">Estimated Cost</div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-gray-600">Overnight Trip</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -323,6 +339,23 @@ export function AiRoutePlanner() {
                           </svg>
                           View on Google Maps
                         </a>
+                      )}
+                      
+                      {/* Hotel Recommendations */}
+                      {item.hotelRecommendations && item.hotelRecommendations.length > 0 && (
+                        <div className="mt-4">
+                          <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+                            <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            Hotel Recommendations
+                          </h5>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {item.hotelRecommendations.map((hotel: any, hotelIndex: number) => (
+                              <HotelCard key={hotelIndex} hotel={hotel} />
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
