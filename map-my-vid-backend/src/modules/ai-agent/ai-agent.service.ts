@@ -9,6 +9,15 @@ export interface RoutePreferences {
   duration?: number; // hours
 }
 
+export interface HotelRecommendation {
+  name: string;
+  price: string;
+  rating: string;
+  distance: string;
+  address: string;
+  bookingUrl: string;
+}
+
 export interface RouteItem {
   order: number;
   locationId: string;
@@ -16,6 +25,7 @@ export interface RouteItem {
   estimatedDuration: string;
   transportation: string;
   notes: string;
+  hotelRecommendations?: HotelRecommendation[];
   location?: {
     id: string;
     name: string;
@@ -32,6 +42,8 @@ export interface RouteSummary {
   totalDistance: string;
   transportationMode: string;
   bestTimeToStart: string;
+  isOvernightTrip?: boolean;
+  totalEstimatedCost?: string;
 }
 
 export interface RouteResponse {
@@ -82,7 +94,7 @@ export class AiAgentService {
 
     try {
       const model = this.genAI.getGenerativeModel({ 
-        model: 'gemini-2.5-flash' 
+        model: 'gemini-2.5-flash'
       });
       
       const result = await model.generateContent(prompt);
@@ -167,6 +179,9 @@ export class AiAgentService {
   }
 
   private buildRoutePrompt(locations: any[], preferences?: RoutePreferences): string {
+    const duration = preferences?.duration || 8;
+    const isOvernightTrip = duration > 12 || (preferences?.timeOfDay === 'evening' && duration > 6);
+    
     return `
 Bạn là một AI Agent chuyên về lập kế hoạch du lịch thông minh. Dựa trên danh sách các địa điểm yêu thích của người dùng, hãy tạo một lộ trình tối ưu.
 
@@ -178,11 +193,12 @@ ${index + 1}. ${loc.name} (${loc.type})
    - Ngữ cảnh: ${loc.context}
 `).join('')}
 
-YÊU CẦU LỘ TRÌNH:
-- Thời gian: ${preferences?.timeOfDay || 'linh hoạt'}
-- Phương tiện: ${preferences?.transportation || 'linh hoạt'}
-- Khoảng cách tối đa: ${preferences?.maxDistance || 'không giới hạn'} km
-- Thời lượng: ${preferences?.duration || '1 ngày'} giờ
+THÔNG TIN CHUYẾN ĐI:
+- Thời gian: ${preferences?.timeOfDay || 'morning'}
+- Thời lượng: ${duration} giờ
+- Phương tiện: ${preferences?.transportation || 'walking'}
+- Khoảng cách tối đa: ${preferences?.maxDistance || 20} km
+- Chuyến đi qua đêm: ${isOvernightTrip ? 'CÓ' : 'KHÔNG'}
 
 Hãy tạo lộ trình tối ưu với:
 1. Thứ tự tham quan hợp lý (tính toán khoảng cách và thời gian di chuyển)
@@ -190,6 +206,17 @@ Hãy tạo lộ trình tối ưu với:
 3. Gợi ý phương tiện di chuyển giữa các điểm
 4. Ước tính tổng thời gian và khoảng cách
 5. Lưu ý đặc biệt cho từng địa điểm
+${isOvernightTrip ? '6. Tìm kiếm và đề xuất khách sạn gần các địa điểm yêu thích với giá cả, đánh giá và vị trí' : ''}
+
+${isOvernightTrip ? `
+QUAN TRỌNG: Vì đây là chuyến đi qua đêm, hãy tìm kiếm thông tin khách sạn:
+- Tìm kiếm "hotels near [địa điểm] [thành phố]" trên Google
+- Tìm 2-3 khách sạn gần các địa điểm yêu thích nhất
+- Bao gồm giá phòng, đánh giá (sao), và khoảng cách đến địa điểm
+- Ưu tiên khách sạn có giá hợp lý và đánh giá tốt
+- Tích hợp thông tin khách sạn vào route items
+- Sử dụng thông tin thực tế từ kết quả tìm kiếm Google
+` : ''}
 
 Trả về kết quả dưới dạng JSON với format:
 {
@@ -200,14 +227,26 @@ Trả về kết quả dưới dạng JSON với format:
       "name": "Tên địa điểm",
       "estimatedDuration": "30-45 phút",
       "transportation": "Đi bộ/Ô tô/Xe máy",
-      "notes": "Ghi chú đặc biệt"
+      "notes": "Ghi chú đặc biệt"${isOvernightTrip ? `,
+      "hotelRecommendations": [
+        {
+          "name": "Tên khách sạn",
+          "price": "100-150 USD/đêm",
+          "rating": "4.5/5",
+          "distance": "0.5 km từ địa điểm",
+          "address": "Địa chỉ khách sạn",
+          "bookingUrl": "Link đặt phòng"
+        }
+      ]` : ''}
     }
   ],
   "summary": {
     "totalDuration": "4-5 giờ",
     "totalDistance": "8-10 km",
     "transportationMode": "Chủ yếu đi bộ",
-    "bestTimeToStart": "8:00 AM"
+    "bestTimeToStart": "8:00 AM"${isOvernightTrip ? `,
+    "isOvernightTrip": true,
+    "totalEstimatedCost": "200-300 USD"` : ''}
   },
   "recommendations": [
     "Gợi ý 1",
@@ -235,6 +274,15 @@ Hãy lắng nghe yêu cầu của người dùng và tạo lộ trình tối ưu
 3. Gợi ý phương tiện di chuyển giữa các điểm
 4. Ước tính tổng thời gian và khoảng cách
 5. Lưu ý đặc biệt cho từng địa điểm
+6. Nếu người dùng đề cập đến chuyến đi qua đêm hoặc cần nghỉ ngơi, hãy sử dụng Google Search để tìm kiếm thông tin khách sạn gần các địa điểm yêu thích
+
+QUAN TRỌNG: Khi người dùng đề cập đến chuyến đi qua đêm, hãy tìm kiếm thông tin khách sạn:
+- Tìm kiếm "hotels near [địa điểm] [thành phố]" trên Google
+- Tìm 2-3 khách sạn gần các địa điểm yêu thích nhất
+- Bao gồm giá phòng, đánh giá (sao), và khoảng cách đến địa điểm
+- Ưu tiên khách sạn có giá hợp lý và đánh giá tốt
+- Tích hợp thông tin khách sạn vào route items
+- Sử dụng thông tin thực tế từ kết quả tìm kiếm Google
 
 Trả về kết quả dưới dạng JSON với format:
 {
@@ -245,14 +293,26 @@ Trả về kết quả dưới dạng JSON với format:
       "name": "Tên địa điểm",
       "estimatedDuration": "30-45 phút",
       "transportation": "Đi bộ/Ô tô/Xe máy",
-      "notes": "Ghi chú đặc biệt"
+      "notes": "Ghi chú đặc biệt",
+      "hotelRecommendations": [
+        {
+          "name": "Tên khách sạn",
+          "price": "100-150 USD/đêm",
+          "rating": "4.5/5",
+          "distance": "0.5 km từ địa điểm",
+          "address": "Địa chỉ khách sạn",
+          "bookingUrl": "Link đặt phòng"
+        }
+      ]
     }
   ],
   "summary": {
     "totalDuration": "4-5 giờ",
     "totalDistance": "8-10 km",
     "transportationMode": "Chủ yếu đi bộ",
-    "bestTimeToStart": "8:00 AM"
+    "bestTimeToStart": "8:00 AM",
+    "isOvernightTrip": true,
+    "totalEstimatedCost": "200-300 USD"
   },
   "recommendations": [
     "Gợi ý 1",

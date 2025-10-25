@@ -11,6 +11,8 @@ import MapView from '@/components/MapView'
 import LocationList from '@/components/LocationList'
 import MapHeader from '@/components/MapHeader'
 import EmptyState from '@/components/EmptyState'
+import Modal from '@/components/Modal'
+import { AiRoutePlanner } from '@/components/AiRoutePlanner'
 
 // Kiểm tra địa điểm có tọa độ hợp lệ
 const isValidLocation = (loc: DetectedLocation) => {
@@ -54,6 +56,7 @@ export default function MapDashboard() {
 
   // State
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(videos[0] || null)
+  const [isAiRouteModalOpen, setIsAiRouteModalOpen] = useState(false)
   
   // Debug logs
   console.log('videos:', videos)
@@ -216,7 +219,7 @@ export default function MapDashboard() {
   }
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-white relative'>
       <div className='mx-auto max-w-screen-xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8'>
         <div className='mb-4 sm:mb-6 lg:mb-8'>
           <h1 className='mb-2 text-xl font-medium text-gray-900 sm:text-2xl'>{t('dashboard.title')}</h1>
@@ -287,6 +290,28 @@ export default function MapDashboard() {
           </div>
         </div>
       </div>
+
+      {/* AI Route Planner FAB */}
+      <button
+        onClick={() => setIsAiRouteModalOpen(true)}
+        className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-40"
+        title="AI Route Planner"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      </button>
+
+      {/* AI Route Planner Modal */}
+      <Modal
+        isOpen={isAiRouteModalOpen}
+        onClose={() => setIsAiRouteModalOpen(false)}
+        title="AI Route Planner"
+        mode="sidebar"
+        className="max-w-2xl h-full max-h-[80vh] overflow-y-auto"
+      >
+        <AiRoutePlanner />
+      </Modal>
     </div>
   )
 }
