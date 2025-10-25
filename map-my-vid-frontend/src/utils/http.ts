@@ -9,7 +9,7 @@ class Http {
   constructor() {
     this.access_token = getAccessTokenFromLS()
     this.instance = axios.create({
-      baseURL: `http://localhost:${import.meta.env.VITE_BACKEND_PORT}/api`,
+      baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`,
       timeout: 100000,
       headers: {
         'Content-Type': 'application/json'
