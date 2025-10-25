@@ -1,17 +1,19 @@
 # ---------- base ----------
-FROM node:22-alpine AS base
+FROM node:18-alpine AS base
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 
 # ---------- deps ----------
 FROM base AS deps
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache libc6-compat python3 make g++ openssl
 COPY package.json package-lock.json ./
-RUN npm ci --legacy-peer-deps
+RUN npm ci --legacy-peer-deps --only=production
 
 # ---------- builder ----------
-FROM deps AS builder
+FROM base AS builder
 ENV NODE_ENV=development
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
 COPY tsconfig*.json nest-cli.json .prettierrc eslint.config.mjs ./
 COPY prisma ./prisma
 RUN npx prisma generate
@@ -21,22 +23,29 @@ COPY src ./src
 RUN npm run build
 
 # ---------- runner ----------
-FROM node:22-alpine AS runner
+FROM node:18-alpine AS runner
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 RUN apk add --no-cache openssl
 
-# Copy node_modules and built files
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/dist ./dist
-COPY package.json ./package.json
-COPY prisma ./prisma
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
+USER nestjs
 
-# Default port
-ENV PORT=4000
-EXPOSE 4000
+# Copy built application
+COPY --from=builder --chown=nestjs:nodejs /usr/src/app/dist ./dist
+COPY --from=deps --chown=nestjs:nodejs /usr/src/app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /usr/src/app/prisma ./prisma
+COPY --chown=nestjs:nodejs package.json ./
 
-# Healthcheck (optional)
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD node -e "fetch('http://localhost:'+ (process.env.PORT||3000) +'/api/video-analyzer/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+# Default port (Render uses PORT env var)
+ENV PORT=3000
+EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+# Healthcheck với endpoint đúng
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node -e "const http=require('http');const options={hostname:'localhost',port:process.env.PORT||3000,path:'/api/health',method:'GET'};const req=http.request(options,(res)=>{process.exit(res.statusCode===200?0:1)});req.on('error',()=>process.exit(1));req.end();"
+
+# Start command với migration
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]

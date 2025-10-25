@@ -1,19 +1,20 @@
 #!/bin/sh
 set -e
 
+echo "🚀 Starting Map My Vid Backend..."
+
+# Wait for database to be ready
+echo "⏳ Waiting for database connection..."
+npx prisma db push --accept-data-loss || true
+
+# Run migrations
+echo "📦 Running database migrations..."
+npx prisma migrate deploy
+
 # Generate Prisma client
-if [ -d "prisma" ]; then
-  npx prisma generate
-fi
+echo "🔧 Generating Prisma client..."
+npx prisma generate
 
-# Run migrations if requested
-if [ "${RUN_MIGRATIONS}" = "true" ]; then
-  npx prisma migrate deploy
-fi
-
-# Build if needed (dev mounts src)
-if [ ! -d "dist" ] || [ "${BUILD_ON_START}" = "true" ]; then
-  npm run build
-fi
-
+# Start the application
+echo "🎯 Starting application..."
 exec node dist/main.js
