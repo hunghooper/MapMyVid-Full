@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { GoogleGenAI } from '@google/genai'
 import * as fs from 'fs'
-import { Mime } from 'mime'
+import mime from 'mime'
 import { VideoAnalysisResponseDto } from '../dto/video-analysis.dto.js'
 
 @Injectable()
@@ -20,12 +20,11 @@ export class GeminiService {
 
   async analyzeVideo(input: string | Buffer): Promise<VideoAnalysisResponseDto> {
     try {
-      const mime = new Mime()
       let videoBuffer: Buffer
       let mimeType = 'video/mp4'
       if (typeof input === 'string') {
         this.logger.log(`Analyzing video: ${input}`)
-        const detected = mime.getType(input)
+        const detected = mime.lookup(input)
         if (detected) mimeType = detected
         videoBuffer = fs.readFileSync(input)
       } else {
