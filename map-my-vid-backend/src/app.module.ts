@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module.js'
 import { LocationsModule } from './modules/locations/locations.module.js'
 import { AdminModule } from './modules/admin/admin.module.js'
 import { AiAgentModule } from './modules/ai-agent/ai-agent.module.js'
+import { InsuranceModule } from './modules/insurance/insurance.module.js'
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { AiAgentModule } from './modules/ai-agent/ai-agent.module.js'
     VideoAnalyzerModule,
     LocationsModule,
     AdminModule,
-    AiAgentModule
+    AiAgentModule,
+    InsuranceModule
   ]
 }) 
 export class AppModule {}
