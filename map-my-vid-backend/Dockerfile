@@ -15,6 +15,8 @@ ENV NODE_ENV=development
 COPY tsconfig*.json nest-cli.json .prettierrc eslint.config.mjs ./
 COPY prisma ./prisma
 RUN npx prisma generate
+# Install missing type definitions for build
+RUN npm install --save-dev @types/express @types/multer @types/node
 COPY src ./src
 RUN npm run build
 

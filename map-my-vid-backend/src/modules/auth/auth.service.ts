@@ -70,10 +70,10 @@ export class AuthService {
       throw new BadRequestException(ERROR_MESSAGES.AUTH.INVALID_EMAIL_FORMAT)
     }
 
-    const existingUser = await this.usersService.findByEmail(registerDto.email)
-    if (existingUser) {
-      throw new ConflictException(ERROR_MESSAGES.AUTH.EMAIL_ALREADY_EXISTS)
-    }
+    // const existingUser = await this.usersService.findByEmail(registerDto.email)
+    // if (existingUser) {
+    //   throw new ConflictException(ERROR_MESSAGES.AUTH.EMAIL_ALREADY_EXISTS)
+    // }
 
     try {
       const hashedPassword = await bcrypt.hash(registerDto.password, 10)

@@ -37,6 +37,8 @@ export class UsersService {
     try {
       return await this.prisma.user.findUnique({ where: { email } })
     } catch (error) {
+      // Only throw error for actual database errors, not when user is not found
+      console.error('Database error in findByEmail:', error)
       throw new BadRequestException(ERROR_MESSAGES.USER.FAILED_FIND_BY_EMAIL)
     }
   }
